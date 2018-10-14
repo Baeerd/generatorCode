@@ -32,6 +32,7 @@ public class GeneratorJava extends GeneratorCommon{
         // 公共方法名称
         propertiesMap.put(find, resource.getString(find));
         propertiesMap.put(insert, resource.getString(insert));
+        propertiesMap.put(insertSeq, resource.getString(insertSeq));
         propertiesMap.put(update, resource.getString(update));
         propertiesMap.put(delete, resource.getString(delete));
 
@@ -49,6 +50,9 @@ public class GeneratorJava extends GeneratorCommon{
         propertiesMap.put(common_service, resource.getString(common_service));
         propertiesMap.put(common_serviceImpl, resource.getString(common_serviceImpl));
         propertiesMap.put(common_controller, resource.getString(common_controller));
+
+        // mapper文件头
+        propertiesMap.put(mapperTop, resource.getString(mapperTop));
         System.out.println("初始化配置信息....." + propertiesMap);
     }
 
@@ -58,15 +62,15 @@ public class GeneratorJava extends GeneratorCommon{
     private void generator() {
         // 根据数据库配置获取所查表数据
         try {
-            fieldMap = generatorData();
+            generatorData();
         } catch (Exception e) {
             e.printStackTrace();
         }
         // 生成实体类文件(Entity.java, AbstraEntity.java)参数：表名，dataList
-        GeneratorEntity generatorEntity = new GeneratorEntity(propertiesMap, fieldMap, GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName)));
+        GeneratorEntity generatorEntity = new GeneratorEntity(propertiesMap, fieldMap, dbFieldMap);
         generatorEntity.generator();
         // 生成mapper层文件(EntityMapper.java, EntityMapper.xml, AbstratEntityMapper.java)
-        GeneratorMapper generatorMapper = new GeneratorMapper(propertiesMap, fieldMap, GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName)));
+        GeneratorMapper generatorMapper = new GeneratorMapper(propertiesMap, fieldMap, dbFieldMap);
         generatorMapper.generator();
         // 生成service层文件(EntityService.java, EntityServiceImpl.java, AbstratService.java, AbstratServiceImpl.java)
         // 生成controller层文件(EntityController.java, AbstratEntityController.java)
@@ -77,9 +81,7 @@ public class GeneratorJava extends GeneratorCommon{
      * 根据数据库配置信息，连接数据库，对应表所有属性及类型
      * @return
      */
-    private Map<String,String> generatorData() throws Exception {
-        Map<String, String> fieldMap = new LinkedHashMap<>();
-
+    private void generatorData() throws Exception {
         Class.forName(propertiesMap.get(jdbcName));
         String url = propertiesMap.get(jdbcUrl);
         String user = propertiesMap.get(jdbcUser);
@@ -147,13 +149,13 @@ public class GeneratorJava extends GeneratorCommon{
                 System.out.println("获得列" + i + "能否出现在where中:"+ isSearchable);*/
 
                 // 添加进fieldMap中，key=列名，value=列类型
-                fieldMap.put(GeneratorUtil.DBNameToJavaName(columnName),
+                fieldMap.put(columnName,
                         GeneratorUtil.DBTypeToJavaType(scale > 0 ? columnTypeName+"_" : columnTypeName));
+                dbFieldMap.put(columnName, columnTypeName.contains("2") ? columnTypeName.replace("2", "") : columnTypeName);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         System.out.println("表" + propertiesMap.get(tableName) + "的所有属性及类型：" + fieldMap);
-        return fieldMap;
     }
 }

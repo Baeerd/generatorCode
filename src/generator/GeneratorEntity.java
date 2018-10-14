@@ -14,10 +14,10 @@ import java.util.Map;
  */
 public class GeneratorEntity extends GeneratorCommon{
 
-    public GeneratorEntity(Map<String, String> propertiesMap, Map<String, String> fieldMap, String tableName) {
-        this.fieldMap = fieldMap;
+    public GeneratorEntity(Map<String, String> propertiesMap, Map<String, String> fieldMap, Map<String, String> dbFieldMap) {
         this.propertiesMap = propertiesMap;
-        this.tableName = tableName;
+        this.fieldMap = fieldMap;
+        this.dbFieldMap = dbFieldMap;
         initIO();
     }
 
@@ -55,13 +55,13 @@ public class GeneratorEntity extends GeneratorCommon{
         // 生成import部分
         content.append("import java.math.BigDecimal;\r\nimport java.util.Date;\r\n\r\n");
         // 生成类和属性部分
-        content.append("public class "+tableName+" {\r\n\r\n");
-        for(String fieldName : fieldMap.keySet()) {
+        content.append("public class "+GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName))+" {\r\n\r\n");
+        for(String dbFieldName : dbFieldMap.keySet()) {
             //     private Long sid;
-            content.append("    private ").append(fieldMap.get(fieldName)).append(" ").append(GeneratorUtil.lower1(fieldName)).append(";\r\n\r\n");
+            content.append("    private ").append(fieldMap.get(dbFieldName)).append(" ").append(GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))).append(";\r\n\r\n");
         }
         // 生成set、get部分
-        for(String fieldName : fieldMap.keySet()) {
+        for(String dbFieldName : dbFieldMap.keySet()) {
              /*    public Long getSid() {
                         return sid;
                     }
@@ -70,18 +70,18 @@ public class GeneratorEntity extends GeneratorCommon{
                         this.sid = sid;
                     }
               */
-            content.append("    public ").append(fieldMap.get(fieldName)).append(" ").append("get").append(fieldName).append("() {\r\n");
-            content.append("        return ").append(GeneratorUtil.lower1(fieldName)).append(";\r\n");
+            content.append("    public ").append(fieldMap.get(dbFieldName)).append(" ").append("get").append(GeneratorUtil.DBNameToJavaName(dbFieldName)).append("() {\r\n");
+            content.append("        return ").append(GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))).append(";\r\n");
             content.append("    }\r\n\r\n");
 
-            content.append("    public void set").append(fieldName).append("(").append(fieldMap.get(fieldName)).append(" ").append(GeneratorUtil.lower1(fieldName)).append(") {\r\n");
-            content.append("        this.").append(GeneratorUtil.lower1(fieldName)).append(" = ").append(GeneratorUtil.lower1(fieldName)).append(";\r\n");
+            content.append("    public void set").append(GeneratorUtil.DBNameToJavaName(dbFieldName)).append("(").append(fieldMap.get(dbFieldName)).append(" ").append(GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))).append(") {\r\n");
+            content.append("        this.").append(GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))).append(" = ").append(GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))).append(";\r\n");
             content.append("    }\r\n\r\n");
         }
         content.append("}");
         // 生成文件
-        String fileName = tableName;
-        System.out.println("生成文件：" + this.rootPath + GeneratorUtil.packToFolder(propertiesMap.get(package_entity)) + "/" + fileName + ".java...................");
+        String fileName = GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName))+".java";
+        System.out.println("生成文件：" + this.rootPath + GeneratorUtil.packToFolder(propertiesMap.get(package_entity)) + "/" + fileName + "...................");
         outFile(package_entity, fileName, content.toString());
     }
 

@@ -21,6 +21,7 @@ public abstract class GeneratorCommon {
     // 公共方法名称
     public String find = "find";
     public String insert = "insert";
+    public String insertSeq = "insertSeq";
     public String update = "update";
     public String delete = "delete";
 
@@ -39,6 +40,9 @@ public abstract class GeneratorCommon {
     public String common_serviceImpl = "common_serviceImpl";
     public String common_controller = "common_controller";
 
+    // mapper文件头
+    public String mapperTop = "mapperTop";
+
     /**
      *  config.properties文件中的信息
      */
@@ -50,6 +54,11 @@ public abstract class GeneratorCommon {
      * value ： 实体类属性类型
      */
     public Map<String, String> fieldMap = new LinkedHashMap<>();
+
+    /**
+     * 数据库名称集合
+     */
+    public Map<String, String> dbFieldMap = new LinkedHashMap<>();
 
     public String rootPath;
 
@@ -71,7 +80,7 @@ public abstract class GeneratorCommon {
         if(!folder.exists() && !folder.isDirectory()) {
             folder.mkdirs();
         }
-        PrintStream out = new PrintStream(filePath + "/" + fileName + ".java");
+        PrintStream out = new PrintStream(filePath + "/" + fileName);
         // 记录原输出路径
         PrintStream reOut = System.out;
         if(out != null) {
