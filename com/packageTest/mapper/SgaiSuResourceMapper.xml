@@ -35,4 +35,9 @@
       PARENT_SID,CREATED_BY,CREATED_DT,
       UPDATED_BY,UPDATED_DT,VERSION,
       RES_SEQ,RES_PARAMS,VISIBILITY)
+    values (#{sid,jdbcType=NUMBER},#{resId,jdbcType=VARCHAR},#{resName,jdbcType=VARCHAR},
+      #{resType,jdbcType=NUMBER},#{resUri,jdbcType=VARCHAR},#{resLevel,jdbcType=NUMBER},
+      #{parentSid,jdbcType=NUMBER},#{createdBy,jdbcType=VARCHAR},#{createdDt,jdbcType=DATE},
+      #{updatedBy,jdbcType=VARCHAR},#{updatedDt,jdbcType=DATE},#{version,jdbcType=NUMBER},
+      #{resSeq,jdbcType=NUMBER},#{resParams,jdbcType=VARCHAR},#{visibility,jdbcType=VARCHAR})
 

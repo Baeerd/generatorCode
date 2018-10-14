@@ -130,22 +130,40 @@ public class GeneratorMapper extends GeneratorCommon{
             content.append("  \t</selectKey>\r\n");
         }
         content.append("    insert into "+propertiesMap.get(tableName)+" (");
-        int k = 1;
+        int k1 = 1;
         for(String dbFieldName : dbFieldMap.keySet()) {
-            if(k>1 && (k-1) % 3 == 0) {
+            if(k1>1 && (k1-1) % 3 == 0) {
                 content.append("      ");
             }
             content.append(dbFieldName);
-            if(k < dbFieldMap.size()) {
+            if(k1 < dbFieldMap.size()) {
                 content.append(",");
             }
-            if(k%3 == 0 && k != dbFieldMap.size()) {
+            if(k1%3 == 0 && k1 != dbFieldMap.size()) {
                 content.append("\r\n");
             }
-            if(k == dbFieldMap.size()) {
+            if(k1 == dbFieldMap.size()) {
                 content.append(")\r\n");
             }
-            k++;
+            k1++;
+        }
+        content.append("    values (");
+        int k2 = 1;
+        for(String dbFieldName : dbFieldMap.keySet()) {
+            if(k2>1 && (k2-1) % 3 == 0) {
+                content.append("      ");
+            }
+            content.append("#{"+GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))+",jdbcType="+dbFieldMap.get(dbFieldName)+"}");
+            if(k2 < dbFieldMap.size()) {
+                content.append(",");
+            }
+            if(k2%3 == 0 && k2 != dbFieldMap.size()) {
+                content.append("\r\n");
+            }
+            if(k2 == dbFieldMap.size()) {
+                content.append(")\r\n");
+            }
+            k2++;
         }
 
         // update
