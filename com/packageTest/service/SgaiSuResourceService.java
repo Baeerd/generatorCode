@@ -1,14 +1,11 @@
-package com.packageTest.mapper;
-
-import org.springframework.stereotype.Repository;
+package com.packageTest.service;
 
 import com.packageTest.entity.SgaiSuResource;
 
 import java.util.List;
 import java.util.Map;
 
-@Repository
-public interface SgaiSuResourceMapper {
+public interface SgaiSuResourceService {
 
     public void insert(SgaiSuResource sgaiSuResource);
 

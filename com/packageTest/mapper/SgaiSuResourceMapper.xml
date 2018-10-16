@@ -2,19 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.packageTest.mapper.SgaiSuResourceMapper" >
   <resultMap id="BaseResultMap" type="com.packageTest.entity.SgaiSuResource" >
-    <id column="SID" property="sid" jdbcType="NUMBER" />
+    <id column="SID" property="sid" jdbcType="DECIMAL" />
     <result column="RES_ID" property="resId" jdbcType="VARCHAR" />
     <result column="RES_NAME" property="resName" jdbcType="VARCHAR" />
-    <result column="RES_TYPE" property="resType" jdbcType="NUMBER" />
+    <result column="RES_TYPE" property="resType" jdbcType="DECIMAL" />
     <result column="RES_URI" property="resUri" jdbcType="VARCHAR" />
-    <result column="RES_LEVEL" property="resLevel" jdbcType="NUMBER" />
-    <result column="PARENT_SID" property="parentSid" jdbcType="NUMBER" />
+    <result column="RES_LEVEL" property="resLevel" jdbcType="DECIMAL" />
+    <result column="PARENT_SID" property="parentSid" jdbcType="DECIMAL" />
     <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR" />
     <result column="CREATED_DT" property="createdDt" jdbcType="DATE" />
     <result column="UPDATED_BY" property="updatedBy" jdbcType="VARCHAR" />
     <result column="UPDATED_DT" property="updatedDt" jdbcType="DATE" />
-    <result column="VERSION" property="version" jdbcType="NUMBER" />
-    <result column="RES_SEQ" property="resSeq" jdbcType="NUMBER" />
+    <result column="VERSION" property="version" jdbcType="DECIMAL" />
+    <result column="RES_SEQ" property="resSeq" jdbcType="DECIMAL" />
     <result column="RES_PARAMS" property="resParams" jdbcType="VARCHAR" />
     <result column="VISIBILITY" property="visibility" jdbcType="VARCHAR" />
   </resultMap>
@@ -35,9 +35,119 @@
       PARENT_SID,CREATED_BY,CREATED_DT,
       UPDATED_BY,UPDATED_DT,VERSION,
       RES_SEQ,RES_PARAMS,VISIBILITY)
-    values (#{sid,jdbcType=NUMBER},#{resId,jdbcType=VARCHAR},#{resName,jdbcType=VARCHAR},
-      #{resType,jdbcType=NUMBER},#{resUri,jdbcType=VARCHAR},#{resLevel,jdbcType=NUMBER},
-      #{parentSid,jdbcType=NUMBER},#{createdBy,jdbcType=VARCHAR},#{createdDt,jdbcType=DATE},
-      #{updatedBy,jdbcType=VARCHAR},#{updatedDt,jdbcType=DATE},#{version,jdbcType=NUMBER},
-      #{resSeq,jdbcType=NUMBER},#{resParams,jdbcType=VARCHAR},#{visibility,jdbcType=VARCHAR})
+    values (#{sid,jdbcType=DECIMAL},#{resId,jdbcType=VARCHAR},#{resName,jdbcType=VARCHAR},
+      #{resType,jdbcType=DECIMAL},#{resUri,jdbcType=VARCHAR},#{resLevel,jdbcType=DECIMAL},
+      #{parentSid,jdbcType=DECIMAL},#{createdBy,jdbcType=VARCHAR},#{createdDt,jdbcType=DATE},
+      #{updatedBy,jdbcType=VARCHAR},#{updatedDt,jdbcType=DATE},#{version,jdbcType=DECIMAL},
+      #{resSeq,jdbcType=DECIMAL},#{resParams,jdbcType=VARCHAR},#{visibility,jdbcType=VARCHAR})
+  </insert>
 
+  <update id="update" parameterType="com.packageTest.entity.SgaiSuResource" >
+    update sgai_su_resource set VERSION = VERSION+1
+      <if test="sid != null" >
+        ,SID = #{sid,jdbcType=DECIMAL}
+      </if>
+      <if test="resId != null" >
+        ,RES_ID = #{resId,jdbcType=VARCHAR}
+      </if>
+      <if test="resName != null" >
+        ,RES_NAME = #{resName,jdbcType=VARCHAR}
+      </if>
+      <if test="resType != null" >
+        ,RES_TYPE = #{resType,jdbcType=DECIMAL}
+      </if>
+      <if test="resUri != null" >
+        ,RES_URI = #{resUri,jdbcType=VARCHAR}
+      </if>
+      <if test="resLevel != null" >
+        ,RES_LEVEL = #{resLevel,jdbcType=DECIMAL}
+      </if>
+      <if test="parentSid != null" >
+        ,PARENT_SID = #{parentSid,jdbcType=DECIMAL}
+      </if>
+      <if test="createdBy != null" >
+        ,CREATED_BY = #{createdBy,jdbcType=VARCHAR}
+      </if>
+      <if test="createdDt != null" >
+        ,CREATED_DT = #{createdDt,jdbcType=DATE}
+      </if>
+      <if test="updatedBy != null" >
+        ,UPDATED_BY = #{updatedBy,jdbcType=VARCHAR}
+      </if>
+      <if test="updatedDt != null" >
+        ,UPDATED_DT = #{updatedDt,jdbcType=DATE}
+      </if>
+      <if test="version != null" >
+        ,VERSION = #{version,jdbcType=DECIMAL}
+      </if>
+      <if test="resSeq != null" >
+        ,RES_SEQ = #{resSeq,jdbcType=DECIMAL}
+      </if>
+      <if test="resParams != null" >
+        ,RES_PARAMS = #{resParams,jdbcType=VARCHAR}
+      </if>
+      <if test="visibility != null" >
+        ,VISIBILITY = #{visibility,jdbcType=VARCHAR}
+      </if>
+  		where SID = #{sid,jdbcType=DECIMAL}
+  </update>
+
+  <delete id="delete" parameterType="com.packageTest.entity.SgaiSuResource" >
+    delete from sgai_su_resource
+    where SID = #{sid,jdbcType=DECIMAL}
+  </delete>
+
+  <select id="find" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select
+		<include refid="Base_Column_List" />
+	from sgai_su_resource
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+		      <if test="sid != null" >
+		        and SID = #{sid,jdbcType=DECIMAL}
+		      </if>
+		      <if test="resId != null" >
+		        and RES_ID = #{resId,jdbcType=DECIMAL}
+		      </if>
+		      <if test="resName != null" >
+		        and RES_NAME = #{resName,jdbcType=DECIMAL}
+		      </if>
+		      <if test="resType != null" >
+		        and RES_TYPE = #{resType,jdbcType=DECIMAL}
+		      </if>
+		      <if test="resUri != null" >
+		        and RES_URI = #{resUri,jdbcType=DECIMAL}
+		      </if>
+		      <if test="resLevel != null" >
+		        and RES_LEVEL = #{resLevel,jdbcType=DECIMAL}
+		      </if>
+		      <if test="parentSid != null" >
+		        and PARENT_SID = #{parentSid,jdbcType=DECIMAL}
+		      </if>
+		      <if test="createdBy != null" >
+		        and CREATED_BY = #{createdBy,jdbcType=DECIMAL}
+		      </if>
+		      <if test="createdDt != null" >
+		        and CREATED_DT = #{createdDt,jdbcType=DECIMAL}
+		      </if>
+		      <if test="updatedBy != null" >
+		        and UPDATED_BY = #{updatedBy,jdbcType=DECIMAL}
+		      </if>
+		      <if test="updatedDt != null" >
+		        and UPDATED_DT = #{updatedDt,jdbcType=DECIMAL}
+		      </if>
+		      <if test="version != null" >
+		        and VERSION = #{version,jdbcType=DECIMAL}
+		      </if>
+		      <if test="resSeq != null" >
+		        and RES_SEQ = #{resSeq,jdbcType=DECIMAL}
+		      </if>
+		      <if test="resParams != null" >
+		        and RES_PARAMS = #{resParams,jdbcType=DECIMAL}
+		      </if>
+		      <if test="visibility != null" >
+		        and VISIBILITY = #{visibility,jdbcType=DECIMAL}
+		      </if>
+	      </trim>
+	order by SID desc
+  </select>
+</mapper>

@@ -6,7 +6,7 @@ import com.test.service.TestEntityService;
 import java.util.List;
 import java.util.Map;
 
-//@Controller()
+//@Controller
 //@RequestMapping("/testEntity")
 public class TestEntityController {
 

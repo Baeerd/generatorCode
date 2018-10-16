@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public abstract class GeneratorCommon {
 
@@ -42,6 +43,7 @@ public abstract class GeneratorCommon {
 
     // mapper文件头
     public String mapperTop = "mapperTop";
+    public String updateVersion = "updateVersion";
 
     /**
      *  config.properties文件中的信息
@@ -63,6 +65,16 @@ public abstract class GeneratorCommon {
     public String rootPath;
 
     /**
+     * 实体类名
+     */
+    public String entityClass;
+
+    /**
+     * 实体类名（首字母小写）
+     */
+    public String entityName;
+
+    /**
      * 初始化创建文件IO流方法
      */
     public void initIO() {
@@ -74,8 +86,53 @@ public abstract class GeneratorCommon {
         }
     }
 
+    /**
+     * 初始化配置文件数据
+     */
+    public void initProperties() {
+        // 创建对象时获取配置文件信息
+        ResourceBundle resource = ResourceBundle.getBundle("generator/config");
+        //获取key对应的value值
+        propertiesMap.put(jdbcName, resource.getString(jdbcName));
+        propertiesMap.put(jdbcUrl, resource.getString(jdbcUrl));
+        propertiesMap.put(jdbcUser, resource.getString(jdbcUser));
+        propertiesMap.put(jdbcPassword, resource.getString(jdbcPassword));
+
+        // 公共方法名称
+        propertiesMap.put(find, resource.getString(find));
+        propertiesMap.put(insert, resource.getString(insert));
+        propertiesMap.put(insertSeq, resource.getString(insertSeq));
+        propertiesMap.put(update, resource.getString(update));
+        propertiesMap.put(delete, resource.getString(delete));
+
+        // 表数据及包数据
+        propertiesMap.put(tableName, resource.getString(tableName));
+        propertiesMap.put(package_controller, resource.getString(package_controller));
+        propertiesMap.put(package_service, resource.getString(package_service));
+        propertiesMap.put(package_mapper, resource.getString(package_mapper));
+        propertiesMap.put(package_entity, resource.getString(package_entity));
+
+        // 公共继承类名
+        propertiesMap.put(common_entity, resource.getString(common_entity));
+        propertiesMap.put(entityField, resource.getString(entityField));
+        propertiesMap.put(common_Mapper, resource.getString(common_Mapper));
+        propertiesMap.put(common_service, resource.getString(common_service));
+        propertiesMap.put(common_serviceImpl, resource.getString(common_serviceImpl));
+        propertiesMap.put(common_controller, resource.getString(common_controller));
+
+        // mapper文件头
+        propertiesMap.put(mapperTop, resource.getString(mapperTop));
+        propertiesMap.put(updateVersion, resource.getString(updateVersion));
+        System.out.println("初始化配置信息....." + propertiesMap);
+    }
+
     public void outFile(String packageName, String fileName, String content) throws  Exception{
-        String filePath = this.rootPath + GeneratorUtil.packToFolder(propertiesMap.get(packageName));
+        String filePath = "";
+        if(fileName.contains("Impl.java")) {
+            filePath = this.rootPath + GeneratorUtil.packToFolder(propertiesMap.get(packageName)+".impl");
+        } else {
+            filePath = this.rootPath + GeneratorUtil.packToFolder(propertiesMap.get(packageName));
+        }
         File folder = new File(filePath);
         if(!folder.exists() && !folder.isDirectory()) {
             folder.mkdirs();
@@ -90,5 +147,36 @@ public abstract class GeneratorCommon {
         // 还原System.out输出路径
         System.setOut(reOut);
     }
+
+    /**
+     * 生成文件方法
+     * @param commonFlag
+     */
+    public void generator(String commonFlag) {
+        try {
+            // 判断是否需要生成Abstract文件
+            if (propertiesMap.get(commonFlag) != null && !propertiesMap.get(commonFlag).equals("")) {
+                // 需要生成Abstract文件
+                generatorWithAbstrat();
+            } else {
+                // 不需要生成Abstract文件
+                generatorWithNotAbstrat();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 需要生成Abstract文件
+     * @throws Exception
+     */
+    protected abstract void generatorWithAbstrat() throws Exception;
+
+    /**
+     * 不需要生成Abstract文件
+     * @throws Exception
+     */
+    protected abstract void generatorWithNotAbstrat() throws Exception;
 
 }

@@ -18,45 +18,6 @@ public class GeneratorJava extends GeneratorCommon{
     }
 
     /**
-     * 初始化配置文件数据
-     */
-    private void initProperties() {
-        // 创建对象时获取配置文件信息
-        ResourceBundle resource = ResourceBundle.getBundle("generator/config");
-        //获取key对应的value值
-        propertiesMap.put(jdbcName, resource.getString(jdbcName));
-        propertiesMap.put(jdbcUrl, resource.getString(jdbcUrl));
-        propertiesMap.put(jdbcUser, resource.getString(jdbcUser));
-        propertiesMap.put(jdbcPassword, resource.getString(jdbcPassword));
-
-        // 公共方法名称
-        propertiesMap.put(find, resource.getString(find));
-        propertiesMap.put(insert, resource.getString(insert));
-        propertiesMap.put(insertSeq, resource.getString(insertSeq));
-        propertiesMap.put(update, resource.getString(update));
-        propertiesMap.put(delete, resource.getString(delete));
-
-        // 表数据及包数据
-        propertiesMap.put(tableName, resource.getString(tableName));
-        propertiesMap.put(package_controller, resource.getString(package_controller));
-        propertiesMap.put(package_service, resource.getString(package_service));
-        propertiesMap.put(package_mapper, resource.getString(package_mapper));
-        propertiesMap.put(package_entity, resource.getString(package_entity));
-
-        // 公共继承类名
-        propertiesMap.put(common_entity, resource.getString(common_entity));
-        propertiesMap.put(entityField, resource.getString(entityField));
-        propertiesMap.put(common_Mapper, resource.getString(common_Mapper));
-        propertiesMap.put(common_service, resource.getString(common_service));
-        propertiesMap.put(common_serviceImpl, resource.getString(common_serviceImpl));
-        propertiesMap.put(common_controller, resource.getString(common_controller));
-
-        // mapper文件头
-        propertiesMap.put(mapperTop, resource.getString(mapperTop));
-        System.out.println("初始化配置信息....." + propertiesMap);
-    }
-
-    /**
      * 生成代码
      */
     private void generator() {
@@ -68,12 +29,16 @@ public class GeneratorJava extends GeneratorCommon{
         }
         // 生成实体类文件(Entity.java, AbstraEntity.java)参数：表名，dataList
         GeneratorEntity generatorEntity = new GeneratorEntity(propertiesMap, fieldMap, dbFieldMap);
-        generatorEntity.generator();
+        generatorEntity.generator(common_entity);
         // 生成mapper层文件(EntityMapper.java, EntityMapper.xml, AbstratEntityMapper.java)
         GeneratorMapper generatorMapper = new GeneratorMapper(propertiesMap, fieldMap, dbFieldMap);
-        generatorMapper.generator();
+        generatorMapper.generator(common_Mapper);
         // 生成service层文件(EntityService.java, EntityServiceImpl.java, AbstratService.java, AbstratServiceImpl.java)
+        GeneratorService generatorService = new GeneratorService(propertiesMap, fieldMap, dbFieldMap);
+        generatorService.generator(common_service);
         // 生成controller层文件(EntityController.java, AbstratEntityController.java)
+        GeneratorController generatorController = new GeneratorController(propertiesMap, fieldMap, dbFieldMap);
+        generatorController.generator(common_controller);
 
     }
 
@@ -151,11 +116,25 @@ public class GeneratorJava extends GeneratorCommon{
                 // 添加进fieldMap中，key=列名，value=列类型
                 fieldMap.put(columnName,
                         GeneratorUtil.DBTypeToJavaType(scale > 0 ? columnTypeName+"_" : columnTypeName));
-                dbFieldMap.put(columnName, columnTypeName.contains("2") ? columnTypeName.replace("2", "") : columnTypeName);
+                if(columnTypeName.contains("2")) {
+                    dbFieldMap.put(columnName, columnTypeName.replace("2", ""));
+                } else if (columnTypeName.contains("NUMBER")) {
+                    dbFieldMap.put(columnName, columnTypeName.replace("NUMBER", "DECIMAL"));
+                } else {
+                    dbFieldMap.put(columnName, columnTypeName);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         System.out.println("表" + propertiesMap.get(tableName) + "的所有属性及类型：" + fieldMap);
+    }
+
+    @Override
+    protected void generatorWithAbstrat() throws Exception {
+    }
+
+    @Override
+    protected void generatorWithNotAbstrat() throws Exception {
     }
 }

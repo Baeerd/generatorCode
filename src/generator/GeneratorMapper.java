@@ -14,67 +14,76 @@ public class GeneratorMapper extends GeneratorCommon{
         this.fieldMap = fieldMap;
         this.dbFieldMap = dbFieldMap;
         initIO();
-    }
-
-    /**
-     * 生成mapper层文件(EntityMapper.java, EntityMapper.xml, AbstratEntityMapper.java)
-     */
-    public void generator() {
-        try {
-            // 判断是否需要生成Abstract文件common_Mapper
-            if (propertiesMap.get(common_Mapper) != null && !propertiesMap.get(common_Mapper).equals("")) {
-                // 需要生成Abstract文件
-                generatorWithAbstrat();
-            } else {
-                // 不需要生成Abstract文件
-                generatorWithNotAbstrat();
-            }
-            // 生成.xml文件
-            generatorMapperXml();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        entityClass = GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName));
+        entityName = GeneratorUtil.lower1(entityClass);
     }
 
     /**
      * 需要生成Abstract文件
      */
-    private void generatorWithAbstrat() {
+    @Override
+    public void generatorWithAbstrat() {
 
     }
 
     /**
      * 不需要生成Abstract文件
      */
-    private void generatorWithNotAbstrat() throws Exception {
+    @Override
+    public void generatorWithNotAbstrat() throws Exception {
+        // 生成没有Abstract文件的java文件
+        generatorJavaWithNotAbstrat();
+        // 生成.xml文件
+        generatorMapperXml();
+    }
+
+    /**
+     * 生成Mapper方法
+     * @param content
+     * @return
+     */
+    private StringBuilder mapperMethod(StringBuilder content) {
+        // 添加方法
+        content.append("    public void ").append(propertiesMap.get(insert)).append("(").append(entityClass)
+                .append(" ").append(entityName).append(");\r\n\r\n");
+
+        // 修改方法
+        content.append("    public void ").append(propertiesMap.get(update)).append("(").append(entityClass)
+                .append(" ").append(entityName).append(");\r\n\r\n");
+
+        // 删除方法
+        content.append("    public void ").append(propertiesMap.get(delete)).append("(").append(entityClass)
+                .append(" ").append(entityName).append(");\r\n\r\n");
+
+        // 查询方法
+        content.append("    public List<").append(entityClass).append("> ").append(propertiesMap.get(find))
+                .append("(Map<String, Object> params);\r\n\r\n");
+
+        return content;
+    }
+
+    /**
+     * 生成没有Abstract文件的java文件
+     * @throws Exception
+     */
+    private void generatorJavaWithNotAbstrat() throws Exception{
         // 文件内容
         StringBuilder content = new StringBuilder("package " + propertiesMap.get(package_mapper) + ";\r\n\r\n");
         // 生成import部分
-        content.append("import ").append(propertiesMap.get(package_entity)).append(".").append(tableName).append(";\r\n\r\n");
+        content.append("import org.springframework.stereotype.Repository;\r\n\r\n");
+        content.append("import ").append(propertiesMap.get(package_entity)).append(".").append(entityClass).append(";\r\n\r\n");
         content.append("import java.util.List;\r\nimport java.util.Map;\r\n\r\n");
 
         // 生成类和方法部分
         content.append("@Repository\r\n");
-        content.append("public interface "+GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName))+"Mapper {\r\n\r\n");
+        content.append("public interface "+entityClass+"Mapper {\r\n\r\n");
 
-        // 添加方法
-        content.append("    public void ").append(propertiesMap.get(insert)).append("(").append(GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName)))
-                .append(" ").append(GeneratorUtil.lower1(tableName)).append(");\r\n\r\n");
+        // 生成Mapper方法
+        content = mapperMethod(content);
 
-        // 修改方法
-        content.append("    public void ").append(propertiesMap.get(update)).append("(").append(GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName)))
-                .append(" ").append(GeneratorUtil.lower1(tableName)).append(");\r\n\r\n");
-
-        // 删除方法
-        content.append("    public void ").append(propertiesMap.get(delete)).append("(").append(fieldMap.get(GeneratorUtil.getFirstKey(fieldMap)))
-                .append(" ").append(GeneratorUtil.lower1(GeneratorUtil.getFirstKey(fieldMap))).append(");\r\n\r\n");
-
-        // 查询方法
-        content.append("    public List<").append(GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName))).append("> ").append(propertiesMap.get(find))
-                .append("(Map<String, Object> params);\r\n}");
-
+        content.append("}");
         // 生成文件
-        String fileName = GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName))+"Mapper.java";
+        String fileName = entityClass+"Mapper.java";
         System.out.println("生成文件：" + this.rootPath + GeneratorUtil.packToFolder(propertiesMap.get(package_mapper)) + "/" + fileName + "...................");
         outFile(package_mapper, fileName, content.toString());
     }
@@ -85,10 +94,10 @@ public class GeneratorMapper extends GeneratorCommon{
     private void generatorMapperXml() throws Exception {
         // Mapper文件xml 表头
         StringBuilder content = new StringBuilder(propertiesMap.get(mapperTop));
-        content.append("<mapper namespace=\"").append(propertiesMap.get(package_mapper)).append(".").append(GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName))).append("Mapper\" >\r\n");
+        content.append("<mapper namespace=\"").append(propertiesMap.get(package_mapper)).append(".").append(entityClass).append("Mapper\" >\r\n");
 
         // resultMap
-        content.append("  <resultMap id=\"BaseResultMap\" type=\"").append(propertiesMap.get(package_entity)).append(".").append(GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName))).append("\" >\r\n");
+        content.append("  <resultMap id=\"BaseResultMap\" type=\"").append(propertiesMap.get(package_entity)).append(".").append(entityClass).append("\" >\r\n");
         int i = 1;
         String id = "";
         String idType = "";
@@ -123,7 +132,7 @@ public class GeneratorMapper extends GeneratorCommon{
         content.append("  </sql>\r\n\r\n\r\n");
 
         // insert
-        content.append("  <insert id=\""+propertiesMap.get(insert)+"\" parameterType=\""+propertiesMap.get(package_entity)+"."+GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName))+"\" >\r\n");
+        content.append("  <insert id=\""+propertiesMap.get(insert)+"\" parameterType=\""+propertiesMap.get(package_entity)+"."+entityClass+"\" >\r\n");
         if(propertiesMap.get(insertSeq) != null && !"".equals(propertiesMap.get(insertSeq))) {
             content.append("  \t<selectKey keyProperty=\""+id+"\" order=\"BEFORE\" resultType=\"java.lang."+idType+"\">\r\n");
             content.append("      SELECT "+propertiesMap.get(insertSeq)+".NEXTVAL FROM DUAL\r\n");
@@ -165,13 +174,44 @@ public class GeneratorMapper extends GeneratorCommon{
             }
             k2++;
         }
+        content.append("  </insert>\r\n\r\n");
 
         // update
+        content.append("  <update id=\""+propertiesMap.get(update)+"\" parameterType=\""+propertiesMap.get(package_entity)+"."+entityClass+"\" >\r\n");
+        content.append("    update "+propertiesMap.get(tableName)+" set "+propertiesMap.get(updateVersion)+"\r\n");
+        for(String dbFieldName : dbFieldMap.keySet()) {
+            content.append("      <if test=\""+GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))+" != null\" >\r\n");
+            content.append("        ,"+dbFieldName+" = #{"+GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))+",jdbcType="+dbFieldMap.get(dbFieldName)+"}\r\n");
+            content.append("      </if>\r\n");
+        }
+        content.append("  \t\twhere "+GeneratorUtil.getFirstKey(dbFieldMap)+" = #{"+GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(GeneratorUtil.getFirstKey(dbFieldMap)))+",jdbcType="+dbFieldMap.get(GeneratorUtil.getFirstKey(dbFieldMap))+"}\r\n");
+        content.append("  </update>\r\n\r\n");
+
         // delete
+        content.append("  <delete id=\""+propertiesMap.get(delete)+"\" parameterType=\""+propertiesMap.get(package_entity)+"."+entityClass+"\" >\r\n");
+        content.append("    delete from "+propertiesMap.get(tableName)+"\r\n");
+        content.append("    where "+GeneratorUtil.getFirstKey(dbFieldMap)+" = #{"+GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(GeneratorUtil.getFirstKey(dbFieldMap)))+",jdbcType="+dbFieldMap.get(GeneratorUtil.getFirstKey(dbFieldMap))+"}\r\n");
+        content.append("  </delete>\r\n\r\n");
+
         // find
+        content.append("  <select id=\""+propertiesMap.get(find)+"\" parameterType=\"java.util.Map\" resultMap=\"BaseResultMap\">\r\n");
+        content.append("  \tselect\r\n");
+        content.append("\t\t<include refid=\"Base_Column_List\" />\r\n");
+        content.append("\tfrom "+propertiesMap.get(tableName)+"\r\n");
+        content.append("\t\t<trim prefix=\"WHERE\" prefixOverrides=\"AND |OR \">\r\n");
+        for(String dbFieldName : dbFieldMap.keySet()) {
+            content.append("\t\t      <if test=\""+GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))+" != null\" >\r\n");
+            content.append("\t\t        and "+dbFieldName+" = #{"+GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))+",jdbcType=DECIMAL}\r\n");
+            content.append("\t\t      </if>\r\n");
+        }
+        content.append("\t      </trim>\r\n");
+        content.append("\torder by "+GeneratorUtil.getFirstKey(dbFieldMap)+" desc\r\n");
+        content.append("  </select>\r\n");
+
+        content.append("</mapper>");
 
         // 生成文件
-        String fileName = GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName))+"Mapper.xml";
+        String fileName = entityClass+"Mapper.xml";
         System.out.println("生成文件：" + this.rootPath + GeneratorUtil.packToFolder(propertiesMap.get(package_mapper)) + "/" + fileName + "...................");
         outFile(package_mapper, fileName, content.toString());
     }

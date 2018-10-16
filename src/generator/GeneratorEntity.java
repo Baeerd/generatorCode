@@ -19,43 +19,29 @@ public class GeneratorEntity extends GeneratorCommon{
         this.fieldMap = fieldMap;
         this.dbFieldMap = dbFieldMap;
         initIO();
-    }
-
-    /**
-     * 生成实体类文件(Entity.java, AbstraEntity.java)
-     */
-    public void generator() {
-        try {
-            // 判断是否需要生成AbstractEntity文件common_entity
-            if (propertiesMap.get(common_entity) != null && !propertiesMap.get(common_entity).equals("")) {
-                // 需要生成AbstractEntity文件
-                generatorWithAbstrat();
-            } else {
-                // 不需要生成AbstractEntity文件
-                generatorWithNotAbstrat();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        entityClass = GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName));
+        entityName = GeneratorUtil.lower1(entityClass);
     }
 
     /**
      * 需要生成AbstractEntity文件
      */
-    private void generatorWithAbstrat() {
+    @Override
+    public void generatorWithAbstrat() {
 
     }
 
     /**
      * 不需要生成AbstractEntity文件
      */
-    private void generatorWithNotAbstrat() throws Exception {
+    @Override
+    public void generatorWithNotAbstrat() throws Exception {
         // 文件内容
         StringBuilder content = new StringBuilder("package " + propertiesMap.get(package_entity) + ";\r\n\r\n");
         // 生成import部分
         content.append("import java.math.BigDecimal;\r\nimport java.util.Date;\r\n\r\n");
         // 生成类和属性部分
-        content.append("public class "+GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName))+" {\r\n\r\n");
+        content.append("public class "+entityClass+" {\r\n\r\n");
         for(String dbFieldName : dbFieldMap.keySet()) {
             //     private Long sid;
             content.append("    private ").append(fieldMap.get(dbFieldName)).append(" ").append(GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))).append(";\r\n\r\n");
@@ -80,7 +66,7 @@ public class GeneratorEntity extends GeneratorCommon{
         }
         content.append("}");
         // 生成文件
-        String fileName = GeneratorUtil.DBNameToJavaName(propertiesMap.get(tableName))+".java";
+        String fileName = entityClass+".java";
         System.out.println("生成文件：" + this.rootPath + GeneratorUtil.packToFolder(propertiesMap.get(package_entity)) + "/" + fileName + "...................");
         outFile(package_entity, fileName, content.toString());
     }
