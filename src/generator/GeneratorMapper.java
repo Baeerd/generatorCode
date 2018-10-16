@@ -22,8 +22,70 @@ public class GeneratorMapper extends GeneratorCommon{
      * 需要生成Abstract文件
      */
     @Override
-    public void generatorWithAbstrat() {
+    public void generatorWithAbstrat() throws Exception{
+        // 文件内容
+        StringBuilder content = new StringBuilder("package " + propertiesMap.get(package_mapper) + ";\r\n\r\n");
+        // 生成import部分
+        content.append("import org.springframework.stereotype.Repository;\r\n\r\n");
+        content.append("import " + propertiesMap.get(common_Mapper) + ";\r\n");
+        content.append("import ").append(propertiesMap.get(package_entity)).append(".").append(entityClass).append(";\r\n\r\n");
+        content.append("import java.util.List;\r\nimport java.util.Map;\r\n\r\n");
 
+        // 生成类和方法部分
+        content.append("@Repository\r\n");
+        content.append("public interface "+entityClass+"Mapper extends "+commonClassName+"<"+entityClass+">{\r\n\r\n");
+
+        content.append("}");
+        // 生成文件
+        String fileName = entityClass+"Mapper.java";
+        System.out.println("生成文件：" + this.rootPath + GeneratorUtil.packToFolder(propertiesMap.get(package_mapper)) + "/" + fileName + "...................");
+        outFile(package_mapper, fileName, content.toString());
+    }
+
+    /**
+     * 生成公共类文件
+     * @throws Exception
+     */
+    @Override
+    protected void generatorCommon() throws Exception {
+        // 文件内容
+        StringBuilder content = new StringBuilder("package " + commonPackage + ";\r\n\r\n");
+        // 生成import部分
+        content.append("import java.util.List;\r\nimport java.util.Map;\r\n\r\n");
+
+        // 生成类和方法部分
+        content.append("public interface "+commonClassName+"<T> {\r\n\r\n");
+
+        // 生成Mapper方法
+        content = mapperCommonMethod(content);
+
+        content.append("}");
+        // 生成文件
+        String fileName = commonClassName+".java";
+        System.out.println("生成文件：" + this.rootPath + GeneratorUtil.packToFolder(propertiesMap.get(common_Mapper)) + "/" + fileName + "...................");
+        outFile(common_Mapper, fileName, content.toString());
+    }
+
+    /**
+     * 生成CommonMapper文件的方法
+     * @param content
+     * @return
+     */
+    private StringBuilder mapperCommonMethod(StringBuilder content) {
+        // 添加方法
+        content.append("    public void ").append(propertiesMap.get(insert)).append("(T entity);\r\n\r\n");
+
+        // 修改方法
+        content.append("    public void ").append(propertiesMap.get(update)).append("(T entity);\r\n\r\n");
+
+        // 删除方法
+        content.append("    public void ").append(propertiesMap.get(delete)).append("(T entity);\r\n\r\n");
+
+        // 查询方法
+        content.append("    public List<T> ").append(propertiesMap.get(find))
+                .append("(Map<String, Object> params);\r\n\r\n");
+
+        return content;
     }
 
     /**

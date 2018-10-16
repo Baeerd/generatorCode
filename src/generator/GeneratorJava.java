@@ -137,4 +137,8 @@ public class GeneratorJava extends GeneratorCommon{
     @Override
     protected void generatorWithNotAbstrat() throws Exception {
     }
+
+    @Override
+    protected void generatorCommon() throws Exception {
+    }
 }

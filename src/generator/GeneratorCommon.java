@@ -64,15 +64,17 @@ public abstract class GeneratorCommon {
 
     public String rootPath;
 
-    /**
-     * 实体类名
-     */
+    // 实体类名
     public String entityClass;
 
-    /**
-     * 实体类名（首字母小写）
-     */
+    // 实体类名（首字母小写）
     public String entityName;
+
+    // 公共类包名
+    public String commonPackage;
+
+    // 公共类类名
+    public String commonClassName;
 
     /**
      * 初始化创建文件IO流方法
@@ -130,7 +132,9 @@ public abstract class GeneratorCommon {
         String filePath = "";
         if(fileName.contains("Impl.java")) {
             filePath = this.rootPath + GeneratorUtil.packToFolder(propertiesMap.get(packageName)+".impl");
-        } else {
+        } else if(packageName.contains("common")) {
+            filePath = this.rootPath + GeneratorUtil.packToFolder(commonPackage);
+        }else {
             filePath = this.rootPath + GeneratorUtil.packToFolder(propertiesMap.get(packageName));
         }
         File folder = new File(filePath);
@@ -156,8 +160,14 @@ public abstract class GeneratorCommon {
         try {
             // 判断是否需要生成Abstract文件
             if (propertiesMap.get(commonFlag) != null && !propertiesMap.get(commonFlag).equals("")) {
+                // 初始化公共类包名及类名
+                String commonConfig = propertiesMap.get(commonFlag);
+                commonPackage = commonConfig.substring(0, commonConfig.lastIndexOf("."));
+                commonClassName = commonConfig.substring(commonConfig.lastIndexOf(".")+1);
                 // 需要生成Abstract文件
                 generatorWithAbstrat();
+                // 生成公共类文件
+                generatorCommon();
             } else {
                 // 不需要生成Abstract文件
                 generatorWithNotAbstrat();
@@ -166,6 +176,12 @@ public abstract class GeneratorCommon {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 生成公共类文件
+     * @throws Exception
+     */
+    protected abstract void generatorCommon() throws Exception;
 
     /**
      * 需要生成Abstract文件

@@ -1,13 +1,11 @@
 package com.packageTest.entity;
 
+import com.common.entity.AbstratEntity;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class SgaiSuResource {
-
-    private Long sid;
-
-    private String resId;
+public class SgaiSuResource extends AbstratEntity{
 
     private String resName;
 
@@ -34,22 +32,6 @@ public class SgaiSuResource {
     private String resParams;
 
     private String visibility;
-
-    public Long getSid() {
-        return sid;
-    }
-
-    public void setSid(Long sid) {
-        this.sid = sid;
-    }
-
-    public String getResId() {
-        return resId;
-    }
-
-    public void setResId(String resId) {
-        this.resId = resId;
-    }
 
     public String getResName() {
         return resName;

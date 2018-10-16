@@ -19,14 +19,47 @@ public class GeneratorController extends GeneratorCommon{
     }
 
     /**
-     * 需要生成Abstract文件
+     * TODO 需要生成Abstract文件
      * @throws Exception
      */
     @Override
     protected void generatorWithAbstrat() throws Exception {
+        // 文件内容
+        StringBuilder content = new StringBuilder("package " + propertiesMap.get(package_controller) + ";\r\n\r\n");
+        // 生成import部分
+        content.append("import org.springframework.context.annotation.Scope;\r\n");
+        content.append("import org.springframework.web.bind.annotation.RequestMapping;\r\n");
+        content.append("import org.springframework.stereotype.Controller;\r\n\r\n");
 
+        content.append("import " + propertiesMap.get(common_controller) + ";\r\n");
+        content.append("import ").append(propertiesMap.get(package_entity)).append(".").append(entityClass).append(";\r\n\r\n");
+
+        content.append("import java.util.List;\r\nimport java.util.Map;\r\n\r\n");
+
+        content.append("@Controller\r\n");
+        content.append("@Scope(\"prototype\")\r\n");
+        content.append("@RequestMapping(\"/"+entityName+"\")\r\n");
+        content.append("public class "+entityClass+"Controller extends "+commonClassName+"<"+entityClass+">{\r\n\r\n");
+
+        // 生成方法
+        content = controllerMethod(content);
+
+        content.append("}");
+
+        // 生成文件
+        String fileName = entityClass+"Controller.java";
+        System.out.println("生成文件：" + this.rootPath + GeneratorUtil.packToFolder(propertiesMap.get(package_controller)) + "/" + fileName + "...................");
+        outFile(package_controller, fileName, content.toString());
     }
 
+    /**
+     * TODO 生成公共类文件
+     * @throws Exception
+     */
+    @Override
+    protected void generatorCommon() throws Exception {
+
+    }
 
     /**
      * 生成方法

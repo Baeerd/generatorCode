@@ -1,6 +1,9 @@
 package util;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GeneratorUtil {
     /**
@@ -70,5 +73,44 @@ public class GeneratorUtil {
             }
         }
         return key;
+    }
+
+    /**
+     * 获取Map中前count个键值对(包含第count个)
+     * @param map
+     * @param count
+     * @return
+     */
+    public static Map<String, String> getBeforeMap(Map<String,String> map, Integer count) {
+        Map<String, String> cutMap = new LinkedHashMap<>();
+        int i = 1;
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            if(i <= count) {
+                String key = entry.getKey();
+                cutMap.put(key, map.get(key));
+            }
+            i++;
+        }
+        return cutMap;
+    }
+
+    /**
+     * 获取Map中去除前count个key之后的Map(不包含第count个)
+     * @param map
+     * @param count
+     * @return
+     */
+    public static Map<String, String> getAfterMap(Map<String,String> map, Integer count) {
+        Map<String, String> cutMap = new LinkedHashMap<>();
+
+        int i = 1;
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            if(i > count) {
+                String key = entry.getKey();
+                cutMap.put(key, map.get(key));
+            }
+            i++;
+        }
+        return cutMap;
     }
 }
