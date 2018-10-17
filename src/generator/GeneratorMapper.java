@@ -18,6 +18,7 @@ public class GeneratorMapper extends GeneratorCommon{
         entityName = GeneratorUtil.lower1(entityClass);
     }
 
+    /*******************需要生成Abstract文件*********************************************************/
     /**
      * 需要生成Abstract文件
      */
@@ -88,6 +89,7 @@ public class GeneratorMapper extends GeneratorCommon{
         return content;
     }
 
+    /*******************不需要生成Abstract文件*********************************************************/
     /**
      * 不需要生成Abstract文件
      */
@@ -97,31 +99,6 @@ public class GeneratorMapper extends GeneratorCommon{
         generatorJavaWithNotAbstrat();
         // 生成.xml文件
         generatorMapperXml();
-    }
-
-    /**
-     * 生成Mapper方法
-     * @param content
-     * @return
-     */
-    private StringBuilder mapperMethod(StringBuilder content) {
-        // 添加方法
-        content.append("    public void ").append(propertiesMap.get(insert)).append("(").append(entityClass)
-                .append(" ").append(entityName).append(");\r\n\r\n");
-
-        // 修改方法
-        content.append("    public void ").append(propertiesMap.get(update)).append("(").append(entityClass)
-                .append(" ").append(entityName).append(");\r\n\r\n");
-
-        // 删除方法
-        content.append("    public void ").append(propertiesMap.get(delete)).append("(").append(entityClass)
-                .append(" ").append(entityName).append(");\r\n\r\n");
-
-        // 查询方法
-        content.append("    public List<").append(entityClass).append("> ").append(propertiesMap.get(find))
-                .append("(Map<String, Object> params);\r\n\r\n");
-
-        return content;
     }
 
     /**
@@ -276,5 +253,30 @@ public class GeneratorMapper extends GeneratorCommon{
         String fileName = entityClass+"Mapper.xml";
         System.out.println("生成文件：" + this.rootPath + GeneratorUtil.packToFolder(propertiesMap.get(package_mapper)) + "/" + fileName + "...................");
         outFile(package_mapper, fileName, content.toString());
+    }
+
+    /**
+     * 生成Mapper方法
+     * @param content
+     * @return
+     */
+    private StringBuilder mapperMethod(StringBuilder content) {
+        // 添加方法
+        content.append("    public void ").append(propertiesMap.get(insert)).append("(").append(entityClass)
+                .append(" ").append(entityName).append(");\r\n\r\n");
+
+        // 修改方法
+        content.append("    public void ").append(propertiesMap.get(update)).append("(").append(entityClass)
+                .append(" ").append(entityName).append(");\r\n\r\n");
+
+        // 删除方法
+        content.append("    public void ").append(propertiesMap.get(delete)).append("(").append(entityClass)
+                .append(" ").append(entityName).append(");\r\n\r\n");
+
+        // 查询方法
+        content.append("    public List<").append(entityClass).append("> ").append(propertiesMap.get(find))
+                .append("(Map<String, Object> params);\r\n\r\n");
+
+        return content;
     }
 }

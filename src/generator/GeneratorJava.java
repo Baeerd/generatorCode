@@ -3,7 +3,6 @@ package generator;
 import util.GeneratorUtil;
 
 import java.sql.*;
-import java.util.*;
 
 public class GeneratorJava extends GeneratorCommon{
 

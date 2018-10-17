@@ -24,30 +24,6 @@ public class GeneratorEntity extends GeneratorCommon{
     }
 
     /**
-     * 生成属性及set、get
-     * @param content
-     * @return
-     */
-    private StringBuilder entityMethod(StringBuilder content, Map<String, String> curDbFieldMap) {
-        for(String dbFieldName : curDbFieldMap.keySet()) {
-            //     private Long sid;
-            content.append("    private ").append(curDbFieldMap.get(dbFieldName)).append(" ").append(GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))).append(";\r\n\r\n");
-        }
-        // 生成set、get部分
-        for(String dbFieldName : curDbFieldMap.keySet()) {
-
-            content.append("    public ").append(curDbFieldMap.get(dbFieldName)).append(" ").append("get").append(GeneratorUtil.DBNameToJavaName(dbFieldName)).append("() {\r\n");
-            content.append("        return ").append(GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))).append(";\r\n");
-            content.append("    }\r\n\r\n");
-
-            content.append("    public void set").append(GeneratorUtil.DBNameToJavaName(dbFieldName)).append("(").append(curDbFieldMap.get(dbFieldName)).append(" ").append(GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))).append(") {\r\n");
-            content.append("        this.").append(GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))).append(" = ").append(GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))).append(";\r\n");
-            content.append("    }\r\n\r\n");
-        }
-        return content;
-    }
-
-    /**
      * 需要生成AbstractEntity文件
      */
     @Override
@@ -119,6 +95,30 @@ public class GeneratorEntity extends GeneratorCommon{
         String fileName = entityClass+".java";
         System.out.println("生成文件：" + this.rootPath + GeneratorUtil.packToFolder(propertiesMap.get(package_entity)) + "/" + fileName + "...................");
         outFile(package_entity, fileName, content.toString());
+    }
+
+    /**
+     * 生成属性及set、get
+     * @param content
+     * @return
+     */
+    private StringBuilder entityMethod(StringBuilder content, Map<String, String> curDbFieldMap) {
+        for(String dbFieldName : curDbFieldMap.keySet()) {
+            //     private Long sid;
+            content.append("    private ").append(curDbFieldMap.get(dbFieldName)).append(" ").append(GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))).append(";\r\n\r\n");
+        }
+        // 生成set、get部分
+        for(String dbFieldName : curDbFieldMap.keySet()) {
+
+            content.append("    public ").append(curDbFieldMap.get(dbFieldName)).append(" ").append("get").append(GeneratorUtil.DBNameToJavaName(dbFieldName)).append("() {\r\n");
+            content.append("        return ").append(GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))).append(";\r\n");
+            content.append("    }\r\n\r\n");
+
+            content.append("    public void set").append(GeneratorUtil.DBNameToJavaName(dbFieldName)).append("(").append(curDbFieldMap.get(dbFieldName)).append(" ").append(GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))).append(") {\r\n");
+            content.append("        this.").append(GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))).append(" = ").append(GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))).append(";\r\n");
+            content.append("    }\r\n\r\n");
+        }
+        return content;
     }
 
 }

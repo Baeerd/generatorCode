@@ -18,8 +18,9 @@ public class GeneratorController extends GeneratorCommon{
         entityName = GeneratorUtil.lower1(entityClass);
     }
 
+    /************需要生成Abstract文件*******************************************************/
     /**
-     * TODO 需要生成Abstract文件
+     * 需要生成Abstract文件
      * @throws Exception
      */
     @Override
@@ -38,7 +39,7 @@ public class GeneratorController extends GeneratorCommon{
 
         content.append("@Controller\r\n");
         content.append("@Scope(\"prototype\")\r\n");
-        content.append("@RequestMapping(\"/"+entityName+"\")\r\n");
+        content.append("@RequestMapping(\"/").append(entityName).append("\")\r\n");
         content.append("public class "+entityClass+"Controller extends "+commonClassName+"<"+entityClass+">{\r\n\r\n");
 
         content.append("}");
@@ -49,6 +50,7 @@ public class GeneratorController extends GeneratorCommon{
         outFile(package_controller, fileName, content.toString());
     }
 
+    /************生成公共类文件*******************************************************/
     /**
      * TODO 生成公共类文件
      * @throws Exception
@@ -111,6 +113,7 @@ public class GeneratorController extends GeneratorCommon{
         return content;
     }
 
+    /************不需要生成Abstract文件*******************************************************/
     /**
      * 不需要生成Abstract文件
      * @throws Exception
