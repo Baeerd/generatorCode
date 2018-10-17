@@ -41,9 +41,6 @@ public class GeneratorController extends GeneratorCommon{
         content.append("@RequestMapping(\"/"+entityName+"\")\r\n");
         content.append("public class "+entityClass+"Controller extends "+commonClassName+"<"+entityClass+">{\r\n\r\n");
 
-        // 生成方法
-        content = controllerMethod(content);
-
         content.append("}");
 
         // 生成文件
@@ -58,7 +55,26 @@ public class GeneratorController extends GeneratorCommon{
      */
     @Override
     protected void generatorCommon() throws Exception {
+        // 文件内容
+        StringBuilder content = new StringBuilder("package " + commonPackage + ";\r\n\r\n");
+        // 生成import部分
+        content.append("import ").append(propertiesMap.get(package_entity)).append(".").append(entityClass).append(";\r\n");
+        content.append("import "+propertiesMap.get(package_service)+"."+entityClass+"Service;\r\n\r\n");
+        content.append("import java.util.List;\r\nimport java.util.Map;\r\n\r\n");
 
+        content.append("import org.springframework.web.bind.annotation.RequestMapping;\r\n\r\n");
+
+        content.append("public class "+commonClassName+"<T> {\r\n\r\n");
+
+        // 生成方法
+        content = controllerMethod(content);
+
+        content.append("}");
+
+        // 生成文件
+        String fileName = commonClassName+".java";
+        System.out.println("生成文件：" + this.rootPath + GeneratorUtil.packToFolder(propertiesMap.get(common_controller)) + "/" + fileName + "...................");
+        outFile(common_controller, fileName, content.toString());
     }
 
     /**

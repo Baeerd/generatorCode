@@ -1,139 +1,157 @@
 package com.packageTest.entity;
 
-import com.common.entity.AbstratEntity;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class SgaiSuResource extends AbstratEntity{
+public class SgaiSuResource {
 
-    private String resName;
+    private DECIMAL sid;
 
-    private Long resType;
+    private VARCHAR resId;
 
-    private String resUri;
+    private VARCHAR resName;
 
-    private Long resLevel;
+    private DECIMAL resType;
 
-    private Long parentSid;
+    private VARCHAR resUri;
 
-    private String createdBy;
+    private DECIMAL resLevel;
 
-    private Date createdDt;
+    private DECIMAL parentSid;
 
-    private String updatedBy;
+    private VARCHAR createdBy;
 
-    private Date updatedDt;
+    private DATE createdDt;
 
-    private Long version;
+    private VARCHAR updatedBy;
 
-    private Long resSeq;
+    private DATE updatedDt;
 
-    private String resParams;
+    private DECIMAL version;
 
-    private String visibility;
+    private DECIMAL resSeq;
 
-    public String getResName() {
+    private VARCHAR resParams;
+
+    private VARCHAR visibility;
+
+    public DECIMAL getSid() {
+        return sid;
+    }
+
+    public void setSid(DECIMAL sid) {
+        this.sid = sid;
+    }
+
+    public VARCHAR getResId() {
+        return resId;
+    }
+
+    public void setResId(VARCHAR resId) {
+        this.resId = resId;
+    }
+
+    public VARCHAR getResName() {
         return resName;
     }
 
-    public void setResName(String resName) {
+    public void setResName(VARCHAR resName) {
         this.resName = resName;
     }
 
-    public Long getResType() {
+    public DECIMAL getResType() {
         return resType;
     }
 
-    public void setResType(Long resType) {
+    public void setResType(DECIMAL resType) {
         this.resType = resType;
     }
 
-    public String getResUri() {
+    public VARCHAR getResUri() {
         return resUri;
     }
 
-    public void setResUri(String resUri) {
+    public void setResUri(VARCHAR resUri) {
         this.resUri = resUri;
     }
 
-    public Long getResLevel() {
+    public DECIMAL getResLevel() {
         return resLevel;
     }
 
-    public void setResLevel(Long resLevel) {
+    public void setResLevel(DECIMAL resLevel) {
         this.resLevel = resLevel;
     }
 
-    public Long getParentSid() {
+    public DECIMAL getParentSid() {
         return parentSid;
     }
 
-    public void setParentSid(Long parentSid) {
+    public void setParentSid(DECIMAL parentSid) {
         this.parentSid = parentSid;
     }
 
-    public String getCreatedBy() {
+    public VARCHAR getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(String createdBy) {
+    public void setCreatedBy(VARCHAR createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Date getCreatedDt() {
+    public DATE getCreatedDt() {
         return createdDt;
     }
 
-    public void setCreatedDt(Date createdDt) {
+    public void setCreatedDt(DATE createdDt) {
         this.createdDt = createdDt;
     }
 
-    public String getUpdatedBy() {
+    public VARCHAR getUpdatedBy() {
         return updatedBy;
     }
 
-    public void setUpdatedBy(String updatedBy) {
+    public void setUpdatedBy(VARCHAR updatedBy) {
         this.updatedBy = updatedBy;
     }
 
-    public Date getUpdatedDt() {
+    public DATE getUpdatedDt() {
         return updatedDt;
     }
 
-    public void setUpdatedDt(Date updatedDt) {
+    public void setUpdatedDt(DATE updatedDt) {
         this.updatedDt = updatedDt;
     }
 
-    public Long getVersion() {
+    public DECIMAL getVersion() {
         return version;
     }
 
-    public void setVersion(Long version) {
+    public void setVersion(DECIMAL version) {
         this.version = version;
     }
 
-    public Long getResSeq() {
+    public DECIMAL getResSeq() {
         return resSeq;
     }
 
-    public void setResSeq(Long resSeq) {
+    public void setResSeq(DECIMAL resSeq) {
         this.resSeq = resSeq;
     }
 
-    public String getResParams() {
+    public VARCHAR getResParams() {
         return resParams;
     }
 
-    public void setResParams(String resParams) {
+    public void setResParams(VARCHAR resParams) {
         this.resParams = resParams;
     }
 
-    public String getVisibility() {
+    public VARCHAR getVisibility() {
         return visibility;
     }
 
-    public void setVisibility(String visibility) {
+    public void setVisibility(VARCHAR visibility) {
         this.visibility = visibility;
     }
 
