@@ -119,6 +119,8 @@ public class GeneratorJava extends GeneratorCommon{
                     dbFieldMap.put(columnName, columnTypeName.replace("2", ""));
                 } else if (columnTypeName.contains("NUMBER")) {
                     dbFieldMap.put(columnName, columnTypeName.replace("NUMBER", "DECIMAL"));
+                } else if (columnTypeName.contains("DATE")) {
+                    dbFieldMap.put(columnName, columnTypeName.replace("DATE", "TIMESTAMP"));
                 } else {
                     dbFieldMap.put(columnName, columnTypeName);
                 }

@@ -136,7 +136,7 @@ public class GeneratorController extends GeneratorCommon{
         content.append("@RequestMapping(\"/"+entityName+"\")\r\n");
         content.append("public class "+entityClass+"Controller {\r\n\r\n");
 
-        content.append("    @AutoWired\r\n");
+        content.append("    @Autowired\r\n");
         content.append("    private "+entityClass+"Service "+entityName+"Service;\r\n\r\n");
 
         // 生成方法

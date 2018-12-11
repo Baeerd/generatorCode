@@ -190,7 +190,7 @@ public class GeneratorService extends GeneratorCommon{
 
         content.append("@Service\r\n");
         content.append("public class "+entityClass+"ServiceImpl implements "+entityClass+"Service {\r\n\r\n");
-        content.append("    @AutoWired\r\n");
+        content.append("    @Autowired\r\n");
         content.append("    private "+entityClass+"Mapper "+entityName+"Mapper;\r\n\r\n");
 
         // 生成方法

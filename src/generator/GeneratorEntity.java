@@ -88,7 +88,7 @@ public class GeneratorEntity extends GeneratorCommon{
         content.append("public class "+entityClass+" {\r\n\r\n");
 
         // 生成属性及set、get
-        content = entityMethod(content, dbFieldMap);
+        content = entityMethod(content, fieldMap);
 
         content.append("}");
         // 生成文件

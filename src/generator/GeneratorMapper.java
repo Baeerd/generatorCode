@@ -219,6 +219,10 @@ public class GeneratorMapper extends GeneratorCommon{
         content.append("  <update id=\""+propertiesMap.get(update)+"\" parameterType=\""+propertiesMap.get(package_entity)+"."+entityClass+"\" >\r\n");
         content.append("    update "+propertiesMap.get(tableName)+" set "+propertiesMap.get(updateVersion)+"\r\n");
         for(String dbFieldName : dbFieldMap.keySet()) {
+            //  version字段不生成
+            if("VERSION".equals(dbFieldName)) {
+                continue;
+            }
             content.append("      <if test=\""+GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))+" != null\" >\r\n");
             content.append("        ,"+dbFieldName+" = #{"+GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))+",jdbcType="+dbFieldMap.get(dbFieldName)+"}\r\n");
             content.append("      </if>\r\n");
@@ -240,7 +244,7 @@ public class GeneratorMapper extends GeneratorCommon{
         content.append("\t\t<trim prefix=\"WHERE\" prefixOverrides=\"AND |OR \">\r\n");
         for(String dbFieldName : dbFieldMap.keySet()) {
             content.append("\t\t      <if test=\""+GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))+" != null\" >\r\n");
-            content.append("\t\t        and "+dbFieldName+" = #{"+GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))+",jdbcType=DECIMAL}\r\n");
+            content.append("\t\t        and "+dbFieldName+" = #{"+GeneratorUtil.lower1(GeneratorUtil.DBNameToJavaName(dbFieldName))+",jdbcType="+dbFieldMap.get(dbFieldName)+"}\r\n");
             content.append("\t\t      </if>\r\n");
         }
         content.append("\t      </trim>\r\n");
